@@ -16,11 +16,11 @@
 
     implicit none
 
-        ! ±äÁ¿ÉùÃ÷
+        ! å˜é‡å£°æ˜
         external aW1, aE1, aW2, aE2, aW3, aE3
         REAL(8) :: aE, aW, aP, De, Fe, Dw, Fw, dif, den, u, L, dx, fai0, faiL, aE1, aW1, aW2, aE2, aW3, aE3
         INTEGER :: I,J,K,n
-        !ÒÑÖª²ÎÊı
+        !å·²çŸ¥å‚æ•°
         dif=1.0e-1
         den=1.0e0
         L=1.0e0
@@ -28,15 +28,15 @@
         fai0=1
         faiL=0
         dx=L/n
-        !ÊäÈëËÙ¶È
-        print *,'ÇëÊäÈëËÙ¶Èu='
+        !è¾“å…¥é€Ÿåº¦
+        print *,'è¯·è¾“å…¥é€Ÿåº¦u='
         READ(*,*)u
-        !¼ÆËãDºÍF
+        !è®¡ç®—Då’ŒF
         De=dif/dx
         Dw=dif/dx
         Fe=den*u
         Fw=den*u
-        !¼ÆËãaE, aW, aP
+        !è®¡ç®—aE, aW, aP,1,2,3åˆ†åˆ«ä»£è¡¨ä¸‰ç§æ ¼å¼ï¼ˆä¸­å¿ƒï¼Œè¿é£ï¼Œæ··åˆï¼‰
         DO K=1,3
             IF(K==1) THEN
                 aE=aE1(De,Fe)
@@ -49,17 +49,17 @@
                 aW=aW3(Dw,Fw) 
             ENDIF
             aP=aE+aW+Fe-Fw
-        !µÃµ½ÏµÊı¾ØÕó£¬Çó½â·½³Ì×é
+        !å¾—åˆ°ç³»æ•°çŸ©é˜µï¼Œæ±‚è§£æ–¹ç¨‹ç»„
         call solve(aE,aW,aP,n,fai0,faiL,K)
         ENDDO
-        !¼ÆËã¾«È·½â
+        !è®¡ç®—ç²¾ç¡®è§£
         call exact(faiL,fai0,Fe,dx,L,n,dif)
     end program Console1
     
     
     
     
-    !Ê¹ÓÃ²»Í¬·½·¨ÇóaW£¬aE
+    !ä½¿ç”¨ä¸åŒæ–¹æ³•æ±‚aWï¼ŒaE
     function aE1(De,Fe)
         implicit none
         real*8::aE1,De,Fe
@@ -132,15 +132,15 @@
         implicit none
         real*8::aE,aW,aP,fai0,faiL,A(5,5), b(5), c(4), d(5), x(5)
         INTEGER :: I,J,K,n
-        !ÏµÊı¾ØÕó³õÊ¼»¯
-        !Ê×ÏÈÈ«²¿³õÊ¼»¯Îª0
+        !ç³»æ•°çŸ©é˜µåˆå§‹åŒ–
+        !é¦–å…ˆå…¨éƒ¨åˆå§‹åŒ–ä¸º0
         DO I=1,n
             DO J=1,n
             A(I,J)=0
             ENDDO
             b(I)=0
         ENDDO
-        !³õÊ¼»¯Èı¶Ô½Ç¾ØÕó
+        !åˆå§‹åŒ–ä¸‰å¯¹è§’çŸ©é˜µ
         A(1,1)=aP
         A(1,2)=-aE
         b(1)=aW*fai0
@@ -156,7 +156,7 @@
         A(n,n)=aP
         b(n)=aE*faiL 
     
-        !TDMAÇó½â·½³Ì
+        !TDMAæ±‚è§£æ–¹ç¨‹
         c(1)=A(1,2)/A(1,1)
         d(1)=b(1)/A(1,1)
         DO I=2,(n-1)
@@ -165,16 +165,16 @@
         ENDDO
         d(n)=(b(n)-d(n-1)*A(n,n-1))/(A(n,n)-c(n-1)*A(n,n-1))
         x(n)=d(n)
-        !Êä³ö½á¹û
+        !è¾“å‡ºç»“æœ
         DO I=1,(n-1)
             x(n-I)=d(n-I)-c(n-I)*x(n-I+1)
         ENDDO
         IF(K==1) THEN
-            print *, 'ÖĞĞÄ²é·Ö¸ñÊ½fai=',x 
+            print *, 'ä¸­å¿ƒæŸ¥åˆ†æ ¼å¼fai=',x 
         ELSEIF(K==2) THEN
-            print *, 'Ó­·ç¸ñÊ½fai=',x 
+            print *, 'è¿é£æ ¼å¼fai=',x 
         ELSE
-            print *, '»ìºÏ¸ñÊ½fai=',x  
+            print *, 'æ··åˆæ ¼å¼fai=',x  
         ENDIF
         pause
     end subroutine solve
@@ -186,6 +186,6 @@
         DO I=1,n
             x(I)=(faiL-fai0)*((EXP(Fe*dx*(2*I-1)/(2*dif))-1)/(EXP(Fe*L/dif)-1))+fai0
         ENDDO
-        print *, '¾«È·½âfai=',x 
+        print *, 'ç²¾ç¡®è§£fai=',x 
         pause
     end subroutine exact
